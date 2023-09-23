@@ -1,1 +1,1 @@
-unidad = int(input("cual unidad va a utilizar"))
+unidad = int(input("cual unidad va a utilizar\n kilómetro(1)\n hectómetro(2)\n decámetro(3)\n metro(4)\n decímetro(5)\n centímetro(6)\n milímetro(7)"))
