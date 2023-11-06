@@ -1,207 +1,209 @@
-#region importaciones#
-import platform
 import os
-#endregion
-
+print("BIENVENIDO A HORMIGONERA -> JAMA <- ")
 #region Funciones
-def limpiar_pantalla():
-    '''
-    Esta funcion limpia la consola dependiendo de si se usa windows o linux
-    NOTA: Esta hecho asi por diferencias entre ordenadores del equipo
-    '''
-    if (platform.system() == "windows"):
-        os.system("cls")
-    else:
-        os.system("clear")
-def selector_unidad():
-    '''
-    Esta funcion pide el tipo de unidad que se desea utilizar, calcula el volumen y lo manda a la funcion resistencia para hacer los calculos
-    se guarda en una variable para poder retornarla y que los datos se puedan reutilizar sin tener que llamar nuevamente a la funcion
-    NOTA: revisar las unidades de medidas estan hechas siempre en metros
-    '''
-    print('''
-Unidades:
-	1) Metros        5) Decametro
-	2) Kilometros    6) Centimetro
-	3) Yardas        7) Milimetro
-	4) Hectometro
-	''')
-    unidad=int(input("Que tipo de unidad deseas utilizar? "))
-    #unidad = int(input("cual unidad va a utilizar\n kilómetro(1)\n hectómetro(2)\n decámetro(3)\n metro(4)\n decímetro(5)\n centímetro(6)\n milímetro(7)"))
-    match unidad:
-    	case 1:
-		    largo_superficie=float(input("Cual es el largo de la superficie? "))
-		    ancho_superficie=float(input("Cual es el ancho de la superficie? "))
-		    alto_superficie=float(input("Cual es la altura de la superficie? "))
-		    volumen=largo_superficie*ancho_superficie*alto_superficie
-		    print("el volumen es de: ", volumen, "m3")
-		    resis=resistencia(volumen)
-    	case 2:
-		    print("Cambiar a yardas en proceso")
-		    '''
-		    para pasar de yardas a metro es la siguiente operacion:
-		    medida en yarda * 0.9144 / 1
-		    '''
-		    pass
-    selector=[largo_superficie,ancho_superficie,alto_superficie,volumen,resis]
-    return(selector)
 def datos_cliente():
-    '''
-    En esta funcion se le pide los datos al cliente guardando Nombre, Apellido, telefono y email en variables que luego se devolveran para poder usarlos cuando sea necesario sin necesidad de llamar a la funcion
-    '''
-    nombre_cliente = input("Nombre: ")
-    apellido_cliente = input("Apellido: ")
-    telefono_cliente = input("Telefono de Contacto: ")
-    mail_cliente = input("Email de Contacto: ")
-    print(f'''
-          Nombre:  {nombre_cliente}
-          Apellido: {apellido_cliente}
-          Telefono: {telefono_cliente}
-          Mail: {mail_cliente}''')
-    datos=[nombre_cliente,apellido_cliente,telefono_cliente,mail_cliente]
-    return(datos)
-    
-def calcular_concreto(volumen, cemento_kg, arena_m3, grava_m3, agua_litro, saco_cemento, resistencia_concreto_psi):
-    '''
-    Esta funcion calcula:
-    * El cemento total necesario para la superficie.
-    * La cantidad de arena necesaria
-    * La cantidad de grava necesaria
-    * La cantidad de agua necesaria
-    y los muestra en pantalla redondeando solo con dos decimales
-    Tambien guarda todo en una variable para reutilizarlas cuando sea necesario sin necesidad de llamar nuevamente a la funcion
-    '''
-    cemento_total=(volumen*saco_cemento)*1.05 #desperdicio de 1.05
-    arena_total=(volumen*arena_m3)
-    grava_total=(volumen*grava_m3)
-    agua_total=(volumen*agua_litro)
-    print(f'''
-    Para una Resistencia de {resistencia_concreto_psi} necesitaras:
-    El cemento total es de: {round(cemento_total,2)}Kg
-    La arena total es de: {round(arena_total,2)}m3
-    La grava total es de: {round(grava_total,2)}m3
-    El agua total es de: {round(agua_total,2)}L
-          ''')
-    calcular=[cemento_total,arena_total,grava_total,agua_total]
-    return(calcular)
-def resistencia(volumen):
-    '''
-    En esta funcion se pide el tipo de resistencia para guardarlo en una variable y calcular el concreto con los valores adecuados para cada resistencia.
-    Si no se selecciona algun valor de la lista se vuelve a llamar a si misma hasta que ponga un valor correcto
-    NOTA: buscar para que sirve cada tipo de resistencia
-    NOTA: los sacos de cemento se calculan con sacos de 50kg
-    '''
-    print('''
-Resistencias:
-          1) 3.500
-          2) 3.000
-          3) 2.500
-          4) 2.000
-          5) 1.500''')
-    resistencia_concreto_psi=int(input("Que tipo de resistencia psi deseas usar? "))
-    
-    match resistencia_concreto_psi: #Dependiendo de la opcion que elija el usuario va a hacer los calculos segun la resistencia
-        case 1:
-            resistencia_concreto_kg=246
-            cemento_kg=420
-            arena_m3=0.67
-            grava_m3=0.67
-            agua_litro=220
-            saco_cemento=8 #lo redondie hacia arriba porque no se puede comprar media bolsa de cemento y 3 medialunas xD
-            resistencia_concreto_psi=3500
-            calcular=calcular_concreto(volumen, cemento_kg, arena_m3, grava_m3, agua_litro, saco_cemento, resistencia_concreto_psi) #va a la funcion para calcular los materiales y el concreto y los guarda en una variable para usarlos cuando sea necesario
-            return(resistencia_concreto_psi, calcular) #devuelve los valores para que puedan ser usados fuera de la funcion
-        case 2:
-            resistencia_concreto_kg=210
-            cemento_kg=350
-            saco_cemento=7
-            arena_m3=0.56
-            grava_m3=0.84
-            agua_litro=180
-            resistencia_concreto_psi=3000
-            calcular=calcular_concreto(volumen, cemento_kg, arena_m3, grava_m3, agua_litro, saco_cemento, resistencia_concreto_psi)
-            return(resistencia_concreto_psi, calcular)
-        case 3:
-            resistencia_concreto_kg=175
-            cemento_kg=300
-            arena_m3=0.48
-            grava_m3=0.96
-            agua_litro=170
-            saco_cemento=6
-            resistencia_concreto_psi=2500
-            calcular=calcular_concreto(volumen, cemento_kg, arena_m3, grava_m3, agua_litro, saco_cemento, resistencia_concreto_psi)
-            return(resistencia_concreto_psi, calcular)
-        case 4:
-            resistencia_concreto_kg=140
-            cemento_kg=260
-            arena_m3=0.63
-            grava_m3=0.84
-            agua_litro=170
-            saco_cemento=5
-            resistencia_concreto_psi=2000
-            calcular=calcular_concreto(volumen, cemento_kg, arena_m3, grava_m3, agua_litro, saco_cemento, resistencia_concreto_psi)
-            return(resistencia_concreto_psi, calcular)
-        case 5:
-            resistencia_concreto_kg=105
-            cemento_kg=210
-            arena_m3=0.5
-            grava_m3=1.0
-            agua_litro=160
-            saco_cemento=4
-            resistencia_concreto_psi=1500
-            calcular=calcular_concreto(volumen, cemento_kg, arena_m3, grava_m3, agua_litro, saco_cemento, resistencia_concreto_psi)
-            return(resistencia_concreto_psi, calcular)
-        case resistencia_concreto: #si no de selecciona ninguna de las opciones permitidas vuelve a llamarse para que el usuario ponga un valor correcto
-            limpiar_pantalla()
-            print("Selecciona un valor de la tabla")
-            R = resistencia()
-            return R
-    return(resistencia_concreto_psi, calcular)
+'''
+Le pide los datos al usuario
+'''
+    print("Introduzca sus datos!!")
+    nombre = str(input("Nombre y Apellido: "))
+    nombre_cliente = nombre.title()
+    while True:                                                                             
+        telefono_cliente = input("Telefono de Contacto: ")
+        if telefono_cliente.isdigit():
+            break
+        else:
+            print("Numero ingresado no valido... intente nuevamente.")    
+    mail_cliente = str(input("Email de Contacto: "))
+    datos_cliente = ["Nombre:", nombre_cliente, "Tel:", telefono_cliente, "Email:", mail_cliente]
+    return datos_cliente
+def seleccion_tipo_cliente():
+'''
+Selecciona el tipo de cliente (Monotributista, Responsable Inscripto, etc)
+'''
+    categoria_de_clientes = ["Monotributista","Responsable Inscripto","Consumidor Final"]
+    factura = ["C","A","C"]
+    while True:
+        try:
+            cat_cliente = int(input("seleccione el tipo de cliente: \n 1. monotributista \n 2. responsable inscripto \n 3. consumidor final \n Elija (1/2/3): "))
+            if cat_cliente >=1 and cat_cliente <=3:
+                tipo_cliente = categoria_de_clientes[cat_cliente-1]
+                tipo_factura = factura[cat_cliente-1]
+                break
+            else:
+                os.system("cls")
+                print("elija 1 para monotributista, 2 para responsable inscripto o 3 para consumidor final.")
+        except ValueError:
+            os.system("cls")
+            print("Seleccione una opcion numerica")
+    return tipo_cliente, tipo_factura
+def calculo_de_volumen():
+'''
+Indica la unidad y Calcula el Volumen Requerido de los materiales
+'''
+    while True:
+        try:
+            unidad = int(input("Indica unidad de medida [1] Metros - [2] Pies: "))
+            if unidad == 1 or unidad == 2:
+                break
+            else:
+                os.system("cls")
+                print("Opcion seleccionada no reconocida, por favor vuelva a intentarlo.")
+        except ValueError:
+            os.system("cls")
+            print("Seleccione una opcion numerica")
+    while True:
+        try:
+            ancho = float(input("Ingrese el ancho del terreno: "))
+            break
+        except ValueError:
+            os.system("cls")
+            print("Ingrese un valor numerico")
+    while True:
+        try:
+            largo = float(input("Ingrese el largo del terreno: "))
+            break
+        except ValueError:
+            os.system("cls")
+            print("Ingrese un valor numerico")
+    while True:
+        try:
+            altura = float(input("Ingrese la altura deseada del hormigon: "))
+            if altura < 1:
+                print("Altura no valida, la misma debe ser mayor a 1")
+            else:
+                break
+        except ValueError:
+            os.system("cls")
+            print("Ingrese un valor numerico")
+    volumen = ancho * largo * (altura/100)
+    return volumen, unidad
+def Resistencia(volumen, unidad):
+'''
+Selecciona y Calcula el tipo de Resistencia requerido
+'''
+    if unidad == 1:
+        while True:
+            try:
+                print("Tipos de resistencias:","Tipo 1 [105 kg]","Tipo 2 [140 kg]","Tipo 3 [175 kg]","Tipo 4 [210 kg]","Tipo 5 [246 kg]")
+                eleccion_de_resistencia = int(input("Seleccione el tipo que desea utilizar: "))
+                if eleccion_de_resistencia >=1 and eleccion_de_resistencia <=5:
+                    cemento = [210, 260, 300, 350, 420]
+                    arena   = [0.5, 0.63, 0.48, 0.56, 0.67]
+                    grava   = [1, 0.84, 0.96, 0.84, 0.67]
+                    agua    = [160, 170, 170, 180, 220]
+                    cant_cemento = ((cemento[eleccion_de_resistencia-1] * volumen) / 50)
+                    cant_arena   = arena[eleccion_de_resistencia-1] * volumen
+                    cant_grava   = grava[eleccion_de_resistencia-1] * volumen
+                    cant_agua    = agua[eleccion_de_resistencia-1] * volumen
+                    cant_cemento = round(cant_cemento,2)
+                    cant_arena = round(cant_arena,2)
+                    cant_grava = round(cant_grava,2)
+                    cant_agua = round(cant_agua,2)
+                    materiales = [
+                        f"Cantidad cemento {cant_cemento} bolsas",
+                        f"Cantidad de arena {cant_arena} m3",
+                        f"Cantidad de grava {cant_grava} m3",
+                        f"Cantidad de agua {cant_agua} Lts"]
+                    break
+                else:
+                    os.system("cls")
+                    print("Seleccion no reconocida, por favor intÃ©ntelo nuevamente.")
+            except ValueError:
+                os.system("cls")
+                print("Seleccion no reconocida, por favor intÃ©ntelo nuevamente.")            
+    else:
+        while True:
+            print("Tipos de resistencias:","Tipo 1 [1500 psi]","Tipo 2 [2000 psi]","Tipo 3 [2500 psi]","Tipo 4 [3000 psi]","Tipo 5 [3500 psi]")
+            eleccion_de_resistencia = int(input("Seleccione el tipo que desea utilizar: "))
+            if eleccion_de_resistencia >=1 and eleccion_de_resistencia <=5:
+                cemento = [462.97, 573.20, 661.38, 771.72, 925.42]
+                arena   = [1765.73, 2224.82, 1695.10, 1977.62, 2366.08]
+                grava   = [3531.47, 2966.43, 3390.21, 2966.43, 2366.08]
+                agua    = [42.26, 44.99, 44.99, 47.72, 58.11]
+                cant_cemento = ((cemento[eleccion_de_resistencia-1] * volumen)/80)
+                cant_arena = arena[eleccion_de_resistencia-1] * volumen
+                cant_grava = grava[eleccion_de_resistencia-1] * volumen
+                cant_agua = agua[eleccion_de_resistencia-1] * volumen
+                cant_cemento = round(cant_cemento,2)
+                cant_arena = round(cant_arena,2)
+                cant_grava = round(cant_grava,2)
+                cant_agua = round(cant_agua,2)
+                materiales = [
+                    f"Cantidad cemento {cant_cemento} Bolsas",
+                    f"Cantidad de arena {cant_arena} p3",
+                    f"Cantidad de grava {cant_grava} p3",
+                    f"Cantidad de agua {cant_agua} Gl"]
+                break
+            else:
+                os.system("cls")
+                print("Seleccion no reconocida, por favor intÃ©ntelo nuevamente.")
+    return materiales
+#region Archivo
+def agregar_cliente_a_archivo(datos_cliente):
+'''
+Crea el archivo a imprimir y le agrega los datos del cliente
+'''
+    with open('clientes.txt', 'a') as archivo:
+        archivo.write(",".join(datos_cliente) + "\n")
+def facturacion(datos_cliente, volumen, materiales, tipo_cliente, tipo_factura,unidad):
+'''
+Crea el archivo a imprimir agregando: Datos del cliente, datos fiscales, Tipo de factura para el cliente y los datos de los materiales necesarios
+'''
+    cliente = datos_cliente # datos personales
+    categoria_cliente = tipo_cliente # datos fiscales
+    factura = tipo_factura # tipo de factura para el cliente
+    material = materiales # datos de los materiales necesarios para la construccion
+    with open('facturacion.txt', 'a') as archivo:
+        archivo.write(f"FACTURA TIPO: {factura}, {categoria_cliente}\n")
+        archivo.write(f"Cliente: {cliente[1]}\n")
+        archivo.write(f"Telefono: {cliente[3]}\n")
+        archivo.write(f"Email: {cliente[5]}\n")
+        if unidad == 1:
+            archivo.write(f"Volumen de hormigon solicitado: {volumen} m3\n")
+        else:
+            archivo.write(f"Volumen de hormigon solicitado: {volumen} p3\n")
+        archivo.write("Materiales:\n")
+        for material in materiales:
+            archivo.write(material + "\n")
+        archivo.write("\n")
 #endregion
-#region Principal_Inicio
-limpiar_pantalla()
-    
-datos=datos_cliente()
-selector=selector_unidad()
-
-#region DatosClientes
-nombre_cliente=datos[0]
-apellido_cliente=datos[1]
-telefono_cliente=datos[2]
-email_cliente=datos[3]
-#endregion
-#region DatosSuperficie
-LargoSuperficie=selector[0]
-AnchoSuperficie=selector[1]
-AltoSuperficie=selector[2]
-VolumenSuperficie=selector[3]
-ResistenciaRequerida=selector[4][0]
-#endregion
-#region MaterialesRequeridos
-Cemento=round(selector[4][1][0],2)
-Arena=round(selector[4][1][1],2)
-Grava=round(selector[4][1][2],2)
-Agua=round(selector[4][1][3],2)
-#endregion
-
-limpiar_pantalla()
-
-print("Datos del cliente: ")
-print(f"Nombre: {nombre_cliente}")
-print(f"Apellido: {apellido_cliente}")
-print(f"Telefono: {telefono_cliente}")
-print(f"Email: {email_cliente}")
-print(" ")
-print("Datos Sobre la superficie: ")
-print(f"Largo de la superficie: {LargoSuperficie}")
-print(f"Ancho de la superficie: {AnchoSuperficie}")
-print(f"Altura de la superficie: {AltoSuperficie}")
-print(f"Volumen de la superficie: {VolumenSuperficie}")
-print(f"Resistencia Requerida: {ResistenciaRequerida}")
-print(" ")
-print("Materiales Requeridos: ")
-print(f"Cemento: {Cemento}")
-print(f"Arena: {Arena}")
-print(f"Grava: {Grava}")
-print(f"Agua: {Agua}")
-#endregion
+#region ProgramaPrincipal
+while True:
+'''
+Los llamados principales para la recoleccion de datos y el correcto funcionamiento del programa
+'''
+    info_cliente = datos_cliente()
+    tipo_cliente, tipo_factura = seleccion_tipo_cliente()
+    info_cliente.append("Tipo de Cliente: " + tipo_cliente)
+    volumen, unidad = calculo_de_volumen()
+    seleccion_de_resistencia = Resistencia(volumen, unidad)
+    confirmar_pedido = True
+    while confirmar_pedido:
+    '''
+    Confirma o descarta las selecciones del cliente
+    '''
+        try:
+            print('''Confirmar pedido [1]
+Descartar pedido [9]''')
+            confirmacion = int(input())
+            if confirmacion == 1 or confirmacion == 9:
+                if confirmacion == 1:
+                    #region Llamado_Archivo
+                    agregar_cliente_a_archivo(info_cliente)
+                    facturacion(info_cliente, volumen, seleccion_de_resistencia, tipo_cliente, tipo_factura, unidad)
+                    os.system("cls")
+                    print("Su compra fue efectuada con exito")
+                    confirmar_pedido = False
+                    #endregion
+                else:
+                    os.system("cls")
+                    print("Su pedido a sido cancelado con exito")
+                    confirmar_pedido = False
+            else:
+                os.system("cls")
+                print("Opcion seleccionada no reconocida, por favor intente de nuevo.")
+        except ValueError:
+            os.system("cls")
+            print("Opcion seleccionada no reconocida, por favor intente de nuevo.")
+            #endregion
